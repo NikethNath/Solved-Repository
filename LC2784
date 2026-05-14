@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool isGood(vector<int>& nums) {
+        int maxnum=0;
+        unordered_map<int,int> mpp;  //vall to freq
+        for(int num : nums){
+            mpp[num]++;
+            maxnum=max(maxnum,num);
+
+        }
+        if(mpp[maxnum]!=2) return false;
+        for(int i=1 ; i<maxnum ; i++){
+            if(mpp[i]!=1)return false;
+        }return true;
+        
+    }
+};
