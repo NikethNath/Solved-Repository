@@ -1,0 +1,70 @@
+class Solution {
+public:
+    class TrieNode{
+        public:
+        int next[26];
+        int16_t index;
+        TrieNode(int index){
+            this->index=index;
+            for(int i=0 ;i<26 ; i++){
+                next[i]=-1;
+            }
+ 
+        }
+
+
+    };
+
+    vector<int> stringIndices(vector<string>& wordsContainer, vector<string>& wordsQuery) {
+        vector<TrieNode*> arr;
+        int16_t defaultans=10001;
+        int16_t defaultidx=10001;
+        vector<int> ans;
+        TrieNode * head=new TrieNode(-1);
+        for(int i=0 ; i<wordsContainer.size() ; i++ ){
+        string s=wordsContainer[i];
+        if(s.length()<defaultans){
+            defaultans=s.length();
+            defaultidx=i;
+        }
+        TrieNode * ptr=head;
+            int r=s.length()-1;
+            for(; r>=0 ; r--){
+                char c=s[r];
+                if(ptr->next[c-'a']!=-1){
+                    ptr=arr[ptr->next[c-'a']];
+                    if(wordsContainer[ptr->index].length()>s.length()){
+                        ptr->index=i;
+                    }
+                    continue;
+                }
+                else{
+                    TrieNode * newnode=new TrieNode(i);
+                    arr.push_back(newnode);
+                    ptr->next[c-'a']=arr.size()-1;
+                    ptr=newnode;
+                }
+            }
+        }
+        for(auto s : wordsQuery){
+            int r=s.length()-1;
+
+            TrieNode * ptr=head;
+            for( ; r>=0 ; r--){
+                if(ptr->next[s[r]-'a']!=-1){
+                    ptr=arr[ptr->next[s[r]-'a']];
+                    continue;
+                }
+                break;
+            }
+            if(ptr->index==-1){
+                ans.push_back(defaultidx);
+            }
+            else{
+                ans.push_back(ptr->index);
+            }
+        }
+        return ans;
+        
+    }
+};
