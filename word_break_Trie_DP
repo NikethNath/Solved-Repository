@@ -1,0 +1,55 @@
+class Solution {
+public:
+    class TrieNode{
+        public:
+        bool eof;
+        vector<TrieNode *> next;
+
+        TrieNode(){
+            eof=false;
+            next.resize(26,nullptr);
+        }
+    };
+        bool rf(int index, string s, TrieNode * head,vector<int> &dp){
+            if(index>s.length()-1) return true;
+            if(dp[index]!=-1) return dp[index];
+            
+            TrieNode * ptr=head;
+            bool ans=false;
+            int i=index;
+            while( i<=s.length()-1 && ptr->next[s[i]-'a']  ){
+                ptr=ptr->next[s[i]-'a'];
+                i++;
+                if(ptr->eof==true){
+                    bool cut=rf(i,s,head,dp);
+                    if(cut) return dp[index]=true;
+                }
+            }
+            return dp[index]=ans;
+        }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        TrieNode * head=new TrieNode;
+        vector<int> dp(s.length()+1,-1);
+        for(string s : wordDict){
+            TrieNode * ptr=head;
+            for(int i=0 ; i<s.length() ; i++){
+                char c=s[i];
+                if(ptr->next[c-'a']){
+                    ptr=ptr->next[c-'a'];
+                }
+                else{
+                    TrieNode * newnode= new TrieNode ;
+                    ptr->next[c-'a']=newnode;
+                    ptr=newnode;
+                }
+                
+
+            }
+            ptr->eof=true;
+        }
+
+    return rf(0,s,head,dp);
+    }
+
+
+};
