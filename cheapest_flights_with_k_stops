@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int rf(int city, int k,int destination,vector<vector<pair<int,int>>>&adj,vector<vector<int>> &dp){
+        if(city==destination) return 0;
+        if(k==0) return 1e9;
+        if(dp[city][k]!=-1) return dp[city][k];
+        int res=1e9;
+
+        for(auto nbr : adj[city]){
+            res=min(res,nbr.second+rf(nbr.first,k-1,destination,adj,dp));
+
+        }
+        return dp[city][k]=res;
+    }
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<vector<pair<int,int>>> adj(n);
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
+        for(auto f : flights){
+            int u=f[0];
+            int v=f[1];
+            int w=f[2];
+            adj[u].push_back({v,w});
+        }
+        int ans=rf(src,k+1,dst,adj,dp);
+        if(ans>=1e9) return -1;
+        return ans;
+
+    }
+};
